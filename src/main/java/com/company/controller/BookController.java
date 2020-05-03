@@ -1,18 +1,13 @@
 package com.company.controller;
 
-import com.company.entity.Book;
-import com.company.entity.Change;
+import com.company.entity.helpentity.NamePrice;
+import com.company.entity.tableentity.Book;
 import com.company.service.BookService;
-import io.swagger.annotations.ApiOperation;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/book")
@@ -52,6 +47,23 @@ public class BookController {
     @PatchMapping("/update")
     public void update(@RequestParam int id,@RequestBody LinkedHashMap<String,String> data){
         bookService.update(id, data);
+    }
+
+    @GetMapping("/namePrice")
+    public List<NamePrice> namePrice(){
+        List<Book> books = findAll();
+        System.out.println(books);
+
+
+        List<NamePrice> result = new ArrayList<>();
+        books.forEach((Book b) ->{result.add(new NamePrice(b.getTitle(),b.getPrice()));});
+
+       return result;
+    }
+
+    @GetMapping("/namePrice/condition")
+    public List<NamePrice> namePricesCondition(){
+        return bookService.getWithCondition();
     }
 
 }

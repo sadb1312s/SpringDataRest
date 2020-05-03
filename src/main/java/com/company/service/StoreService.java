@@ -1,48 +1,48 @@
 package com.company.service;
 
-import com.company.entity.helpentity.NamePrice;
-import com.company.entity.tableentity.Book;
-import com.company.repository.BookRepository;
-
+import com.company.entity.tableentity.Store;
+import com.company.repository.StoreRepository;
 import org.apache.commons.lang3.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.naming.Name;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
-public class BookService {
+public class StoreService {
     @Autowired
-    private BookRepository bookRepository;
+    private StoreRepository storeRepository;
 
     public void delete(int id){
-        bookRepository.deleteById(id);
+        storeRepository.deleteById(id);
     }
 
-    public void save(Book book){
-        bookRepository.save(book);
+    public void save(Store store){
+        storeRepository.save(store);
     }
 
-    public List<Book> findAll(){
-        return bookRepository.findAll();
+    public List<Store> findAll(){
+        return storeRepository.findAll();
     }
 
-    public Optional<Book> findById(int id){
-        Optional<Book> optional = bookRepository.findById(id);
+    public Optional<Store> findById(int id){
+        Optional<Store> optional = storeRepository.findById(id);
         return optional;
     }
 
-    public void updateFull(Book book){
-        Book bookOld = bookRepository.getOne(book.getId());
+    public void updateFull(Store store){
+        Store storeOld = storeRepository.getOne(store.getId());
 
-        if (bookOld != null){
+        if (storeOld != null){
             System.out.println("!");
-            bookOld.copy(book);
-            bookRepository.save(bookOld);
+            storeOld.copy(store);
+            storeRepository.save(storeOld);
         }
     }
 
@@ -50,13 +50,13 @@ public class BookService {
         System.out.println(data);
 
 
-        Book bookForUpdate = bookRepository.findById(id).orElse(null);
+        Store storeForUpdate = storeRepository.findById(id).orElse(null);
 
         //maybe return false(or http status) if exception was thrown
-        if(bookForUpdate != null) {
+        if(storeForUpdate != null) {
             data.forEach((k, v) -> {
                 try {
-                    Field f = Book.class.getDeclaredField(k);
+                    Field f = Store.class.getDeclaredField(k);
 
                     f.setAccessible(true);
                     String className = f.getType().getCanonicalName();
@@ -68,7 +68,7 @@ public class BookService {
                     }
 
                     Constructor<?> ctor = c.getConstructor(String.class);
-                    f.set(bookForUpdate,ctor.newInstance(v));
+                    f.set(storeForUpdate,ctor.newInstance(v));
 
                 } catch (NoSuchFieldException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -83,19 +83,12 @@ public class BookService {
                 }
             });
 
-            bookRepository.save(bookForUpdate);
+            storeRepository.save(storeForUpdate);
         }
     }
 
-    public List<NamePrice> getWithCondition(){
-        List<Book> list = bookRepository.getBooksCondition();
 
-        List<NamePrice> namePrices = new ArrayList<>();
-        list.forEach((Book b)->{namePrices.add(new NamePrice(b.getTitle(),b.getPrice()));});
-
-        return namePrices;
+    public List<String> getTitle(){
+        return storeRepository.getStoreTittle();
     }
-
-
-
 }
