@@ -44,12 +44,6 @@ public class BookController {
         return optional.orElse(null);
     }
 
-   /* @PutMapping("/update/{id}")
-    public void update(@PathVariable int id, @RequestBody HashMap<String,String> valMap){
-        bookService.updateBook(id,valMap);
-
-    }*/
-
     @PutMapping("/updateFull")
     public void updateFull(@RequestBody Book book){
         bookService.updateFull(book);

@@ -2,13 +2,9 @@ package com.company.entity;
 
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.websocket.server.PathParam;
 
 @Data
 @Entity
@@ -16,7 +12,6 @@ import javax.websocket.server.PathParam;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@ApiParam(value = "name that need to be updated", required = true)
     private int id;
     private String title;
     private double price;
