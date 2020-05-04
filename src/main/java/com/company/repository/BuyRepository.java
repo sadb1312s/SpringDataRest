@@ -10,8 +10,4 @@ public interface BuyRepository extends JpaRepository<Buy, Integer> {
     @Query(value = "select to_char(date, 'month') as m from buy group by m",nativeQuery = true)
     List<String> getMonth();
 
-    /*@Query(value = "select bu.lastname, s.title from buy b\n" +
-            "\tjoin buyer bu on b.idbuyer = bu.id\n" +
-            "\tjoin store s on b.idstore = s.id", nativeQuery = true)*/
-
 }

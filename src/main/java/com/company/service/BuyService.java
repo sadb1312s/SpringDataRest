@@ -1,6 +1,8 @@
 package com.company.service;
 
+import com.company.entity.jointables.BuyJoin;
 import com.company.entity.tableentity.Buy;
+import com.company.repository.BuyJoinRepository;
 import com.company.repository.BuyRepository;
 import org.apache.commons.lang3.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,8 @@ import java.util.Optional;
 public class BuyService {
     @Autowired
     BuyRepository buyRepository;
+    @Autowired
+    BuyJoinRepository buyJoinRepository;
 
     public void delete(int id){
         buyRepository.deleteById(id);
@@ -91,7 +96,31 @@ public class BuyService {
         return buyRepository.getMonth();
     }
 
-    /*public void getJoinTable(){
-        return buyRepository.getBnmaeSname();
-    }*/
+
+    public List<String> getJoinTable() {
+        List<BuyJoin> buys = buyJoinRepository.findAll();
+
+        List<String> result = new ArrayList<>();
+        buys.forEach((buyJoin -> result.add("lastname = '"+buyJoin.getBuyer().getLastname()+"', " +
+                "store title = '"+buyJoin.getStore().getTitle()+"'")
+        ));
+
+        return result;
+    }
+
+
+    public List<String> getBuyerBookInfo() {
+        List<BuyJoin> buys = buyJoinRepository.findAll();
+
+        List<String> result = new ArrayList<>();
+        buys.forEach((buyJoin -> result.add("date = '"+buyJoin.getDate()+"', " +
+                "last name = '"+buyJoin.getBuyer().getLastname()+"' " +
+                "discount = '"+buyJoin.getBuyer().getDiscount()+"' " +
+                "book Title = '"+buyJoin.getBook().getTitle()+"' " +
+                "count = '"+buyJoin.getCount()+"'")
+        ));
+
+        return result;
+
+    }
 }

@@ -2,6 +2,9 @@ package com.company.controller;
 
 import com.company.entity.tableentity.Buy;
 import com.company.service.BuyService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +33,9 @@ public class BuyController {
 
     @GetMapping ("/find/all")
     public List<Buy> findAll () {
-        return buyService.findAll();
+        List<Buy> list =  buyService.findAll();
+        System.out.println(list);
+        return list;
     }
 
     @GetMapping("/find/{id}")
@@ -55,7 +60,20 @@ public class BuyController {
     }
 
     @GetMapping("/buyerNameStoreTitle")
-    public void join(){
-        //return buyService.getJoinTable();
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "return value is lastname='value', store title = 'value'")
+    }
+    )
+    public List<String> joinNameTitle(){
+        return buyService.getJoinTable();
+    }
+
+    @GetMapping("/buyerInfoBookInfo")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "return value is lastname='value', store title = 'value'")
+    }
+    )
+    public List<String> joinBuyerInfoBookInfo(){
+        return buyService.getBuyerBookInfo();
     }
 }

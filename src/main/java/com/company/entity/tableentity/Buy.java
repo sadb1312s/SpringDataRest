@@ -1,6 +1,7 @@
 package com.company.entity.tableentity;
 
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,16 +13,17 @@ import java.util.Date;
 public class Buy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(hidden=true)
     private int id;
     private Date date;
-    //@OneToMany(targetEntity = Store.class, mappedBy = "id", fetch = FetchType.LAZY)
+
     private int idstore;
-    //@OneToMany(targetEntity = Buyer.class, mappedBy = "id", fetch = FetchType.LAZY)
     private int idbuyer;
-    //@OneToMany(targetEntity = Book.class, mappedBy = "id", fetch = FetchType.LAZY)
     private int idbook;
+
     private int count;
     private double sum;
+
 
     public void copy(Buy buy) {
         this.date = buy.date;
