@@ -91,4 +91,8 @@ public class StoreService {
     public List<String> getTitle(){
         return storeRepository.getStoreTittle();
     }
+
+    public List<Store> getStoreConditionDiscount() {
+        return storeRepository.getConditionByDiscount();
+    }
 }

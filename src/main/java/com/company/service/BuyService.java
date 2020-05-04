@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.entity.helpentity.InBuyerDistrictBuy;
 import com.company.entity.jointables.BuyJoin;
 import com.company.entity.tableentity.Buy;
 import com.company.repository.BuyJoinRepository;
@@ -123,4 +124,23 @@ public class BuyService {
         return result;
 
     }
+
+    public List<String> getBigBuy(double condition){
+        List<BuyJoin> buys = buyJoinRepository.findAllBySumGreaterThanEqual(condition);
+
+        List<String> result = new ArrayList<>();
+        buys.forEach((buyJoin -> result.add("buy id = '"+buyJoin.getId()+"', " +
+                "last name = '"+buyJoin.getBuyer().getLastname()+"' " +
+                "discount = '"+buyJoin.getDate()+"' ")
+        ));
+
+        return result;
+
+
+    }
+
+    public List<InBuyerDistrictBuy> getBuyInBuyerDistrict(){
+        return buyRepository.getBuyInBuyerDistrict();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.entity.helpentity.BookBuy;
 import com.company.entity.helpentity.NamePrice;
 import com.company.entity.tableentity.Book;
 import com.company.repository.BookRepository;
@@ -96,6 +97,9 @@ public class BookService {
         return namePrices;
     }
 
+    public List<BookBuy> getBookBuyInfo(){
+        return bookRepository.getBookBuyInfo();
+    }
 
 
 }

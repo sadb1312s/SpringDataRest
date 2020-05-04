@@ -49,8 +49,14 @@ public class StoreController {
         storeService.update(id, data);
     }
 
-    @GetMapping("storeTitle")
+    @GetMapping("/storeTitle")
     public List<String> getTitles(){
         return storeService.getTitle();
+    }
+
+    @GetMapping("/storeConditionByBuyDiscount")
+    public List<Store> getStores(){
+        //or use BuyJoin repository
+        return storeService.getStoreConditionDiscount();
     }
 }

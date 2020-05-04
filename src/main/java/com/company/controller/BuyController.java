@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.entity.helpentity.InBuyerDistrictBuy;
 import com.company.entity.tableentity.Buy;
 import com.company.service.BuyService;
 import io.swagger.annotations.ApiResponse;
@@ -75,5 +76,21 @@ public class BuyController {
     )
     public List<String> joinBuyerInfoBookInfo(){
         return buyService.getBuyerBookInfo();
+    }
+
+
+    @GetMapping("/bigBuyCondition/{sumMoreThan}")
+    public List<String> getBigBuy(@PathVariable int sumMoreThan){
+        return buyService.getBigBuy(sumMoreThan);
+    }
+
+    @GetMapping("/bigBuy")
+    public List<String> getBigBuy(){
+        return buyService.getBigBuy(60000);
+    }
+
+    @GetMapping("/buyInBuyerDistrict")
+    public List<InBuyerDistrictBuy> getBuyInBuyerDistrict(){
+        return buyService.getBuyInBuyerDistrict();
     }
 }

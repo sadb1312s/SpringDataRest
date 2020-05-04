@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.entity.helpentity.BookBuy;
 import com.company.entity.helpentity.NamePrice;
 import com.company.entity.tableentity.Book;
 import com.company.service.BookService;
@@ -64,6 +65,11 @@ public class BookController {
     @GetMapping("/namePrice/condition")
     public List<NamePrice> namePricesCondition(){
         return bookService.getWithCondition();
+    }
+
+    @GetMapping("/bookBuySummaryInfo")
+    public List<BookBuy> getBookBuySummaryInfo(){
+        return bookService.getBookBuyInfo();
     }
 
 }
