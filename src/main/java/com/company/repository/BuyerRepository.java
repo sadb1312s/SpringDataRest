@@ -1,5 +1,6 @@
 package com.company.repository;
 
+import com.company.entity.helpentity.NameDiscount;
 import com.company.entity.tableentity.Buyer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,5 +12,5 @@ public interface BuyerRepository extends JpaRepository<Buyer,Integer> {
     List<String> getDistricts();
 
     @Query(value = "select lastname,discount from buyer b where b.district = 'Нижегородский'",nativeQuery = true)
-    List<String> getNameDiscount();
+    List<NameDiscount> getNameDiscount();
 }

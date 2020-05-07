@@ -1,4 +1,4 @@
-package com.company.entity.jointables;
+package com.company.entity.helpentity.jointables;
 
 import com.company.entity.tableentity.Book;
 import com.company.entity.tableentity.Buyer;

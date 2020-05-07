@@ -1,26 +1,19 @@
 package com.company.entity.tableentity;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.company.service.updatetable.Updatable;
 import lombok.Data;
-
 import javax.persistence.*;
-import java.util.Set;
 
 @Data
 @Entity
 @Table (name = "store")
-public class Store {
+public class Store implements Updatable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(hidden=true)
     private int id;
     private String title;
     private String district;
     private int commission;
-
-    /*@ApiModelProperty(hidden=true)
-    @OneToMany(mappedBy = "store")
-    Set<Buy> buys;*/
 
     public void copy(Store store) {
         this.title = store.getTitle();

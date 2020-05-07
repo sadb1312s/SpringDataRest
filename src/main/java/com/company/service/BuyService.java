@@ -1,30 +1,44 @@
 package com.company.service;
 
 import com.company.entity.helpentity.InBuyerDistrictBuy;
-import com.company.entity.jointables.BuyJoin;
+import com.company.entity.helpentity.jointables.BuyJoin;
+import com.company.entity.tableentity.Book;
 import com.company.entity.tableentity.Buy;
+import com.company.entity.tableentity.Buyer;
 import com.company.repository.BuyJoinRepository;
 import com.company.repository.BuyRepository;
-import org.apache.commons.lang3.ClassUtils;
+import com.company.service.updatetable.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
-
-
-//need triggers for sum field ?
 @Service
 public class BuyService {
     @Autowired
     BuyRepository buyRepository;
     @Autowired
     BuyJoinRepository buyJoinRepository;
+    @Autowired
+    private BuyerService buyerService;
+    @Autowired
+    private BookService bookService;
+
+    public void create(Buy buy){
+        Buyer b = buyerService.findById(buy.getIdbuyer()).orElse(null);
+        Book book = bookService.findById(buy.getIdbook()).orElse(null);
+
+        if(b != null & book != null){
+            double sum = book.getPrice()*buy.getCount();
+            sum -= (sum/100)*b.getDiscount();
+
+            if(sum < 0){
+                sum = 0;
+            }
+            buy.setSum(sum);
+        }
+
+        save(buy);
+    }
 
     public void delete(int id){
         buyRepository.deleteById(id);
@@ -39,8 +53,7 @@ public class BuyService {
     }
 
     public Optional<Buy> findById(int id){
-        Optional<Buy> optional = buyRepository.findById(id);
-        return optional;
+        return buyRepository.findById(id);
     }
 
     public void updateFull(Buy buy){
@@ -52,51 +65,22 @@ public class BuyService {
         }
     }
 
-    public void update(int id, LinkedHashMap<String, String> data){
+    public void update(int id, Map<String, String> data){
         System.out.println(data);
 
-
-        Buy buyerForUpdate = buyRepository.findById(id).orElse(null);
+        Buy buyForUpdate = buyRepository.findById(id).orElse(null);
 
         //maybe return false(or http status) if exception was thrown
-        if(buyerForUpdate != null) {
-            data.forEach((k, v) -> {
-                try {
-                    Field f = Buy.class.getDeclaredField(k);
+        if(buyForUpdate != null) {
+            Updater.update(buyForUpdate,data, Buy.class);
 
-                    f.setAccessible(true);
-                    String className = f.getType().getCanonicalName();
-
-                    Class c = ClassUtils.getClass(className);
-
-                    if (c.isPrimitive()){
-                        c = ClassUtils.primitiveToWrapper(c);
-                    }
-
-                    Constructor<?> ctor = c.getConstructor(String.class);
-                    f.set(buyerForUpdate,ctor.newInstance(v));
-
-                } catch (NoSuchFieldException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            buyRepository.save(buyerForUpdate);
+            create(buyForUpdate);
         }
     }
 
     public List<String> getMonth(){
         return buyRepository.getMonth();
     }
-
 
     public List<String> getJoinTable() {
         List<BuyJoin> buys = buyJoinRepository.findAll();
@@ -108,7 +92,6 @@ public class BuyService {
 
         return result;
     }
-
 
     public List<String> getBuyerBookInfo() {
         List<BuyJoin> buys = buyJoinRepository.findAll();
@@ -131,7 +114,7 @@ public class BuyService {
         List<String> result = new ArrayList<>();
         buys.forEach((buyJoin -> result.add("buy id = '"+buyJoin.getId()+"', " +
                 "last name = '"+buyJoin.getBuyer().getLastname()+"' " +
-                "discount = '"+buyJoin.getDate()+"' ")
+                "date = '"+buyJoin.getDate()+"' ")
         ));
 
         return result;

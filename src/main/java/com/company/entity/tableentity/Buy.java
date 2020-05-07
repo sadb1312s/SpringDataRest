@@ -1,19 +1,17 @@
 package com.company.entity.tableentity;
 
 
-import io.swagger.annotations.ApiModelProperty;
+import com.company.service.updatetable.Updatable;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Entity
 @Table (name = "buy")
-public class Buy {
+public class Buy implements Updatable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(hidden=true)
     private int id;
     private Date date;
 
@@ -23,7 +21,6 @@ public class Buy {
 
     private int count;
     private double sum;
-
 
     public void copy(Buy buy) {
         this.date = buy.date;
