@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.controller.exception.NotFoundException;
 import com.company.entity.tableentity.Store;
 import com.company.repository.StoreRepository;
 import com.company.service.updatetable.Updater;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @Service
@@ -28,12 +28,18 @@ public class StoreService {
         return storeRepository.findAll();
     }
 
-    public Optional<Store> findById(int id){
-        return storeRepository.findById(id);
+    public Store findById(int id){
+        Store store = storeRepository.findById(id).orElse(null);
+
+        if(store == null){
+            throw new NotFoundException();
+        }else {
+            return store;
+        }
     }
 
     public void updateFull(Store store){
-        Store storeOld = storeRepository.getOne(store.getId());
+        Store storeOld = findById(store.getId());
 
         if (storeOld != null){
             System.out.println("!");
@@ -46,9 +52,8 @@ public class StoreService {
         System.out.println(data);
 
 
-        Store storeForUpdate = storeRepository.findById(id).orElse(null);
+        Store storeForUpdate = findById(id);
 
-        //maybe return false(or http status) if exception was thrown
         if(storeForUpdate != null) {
             Updater.update(storeForUpdate,data, Store.class);
 

@@ -1,6 +1,5 @@
 package com.company.controller;
 
-import com.company.controller.exception.NoContentException;
 import com.company.entity.helpentity.NameDiscount;
 import com.company.entity.tableentity.Buyer;
 import com.company.service.BuyerService;
@@ -12,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("buyer")
+@RequestMapping("/buyer")
 public class BuyerController {
     @Autowired
     private BuyerService buyerService;
@@ -43,15 +41,7 @@ public class BuyerController {
     }
     )
     public Buyer findById(@PathVariable int id){
-        Optional<Buyer> optional = buyerService.findById(id);
-
-        Buyer buyer = optional.orElse(null);
-
-        if(buyer == null){
-            throw new NoContentException();
-        }
-
-        return buyer;
+        return buyerService.findById(id);
     }
 
     @PutMapping ("/updateFull")

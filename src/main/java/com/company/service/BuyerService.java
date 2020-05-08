@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.controller.exception.NotFoundException;
 import com.company.entity.helpentity.NameDiscount;
 import com.company.entity.tableentity.Buyer;
 import com.company.repository.BuyerRepository;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class BuyerService {
@@ -28,12 +28,18 @@ public class BuyerService {
         return buyerRepository.findAll();
     }
 
-    public Optional<Buyer> findById(int id){
-        return buyerRepository.findById(id);
+    public Buyer findById(int id){
+        Buyer buyer = buyerRepository.findById(id).orElse(null);
+
+        if(buyer == null){
+            throw new NotFoundException();
+        }else {
+            return buyer;
+        }
     }
 
     public void updateFull(Buyer book){
-        Buyer buyerOld = buyerRepository.getOne(book.getId());
+        Buyer buyerOld = findById(book.getId());
 
         if (buyerOld != null){
             buyerOld.copy(book);
@@ -42,17 +48,11 @@ public class BuyerService {
     }
 
     public void update(int id, Map<String, String> data){
-        System.out.println(data);
 
+        Buyer buyerForUpdate = findById(id);
 
-        Buyer buyerForUpdate = buyerRepository.findById(id).orElse(null);
-
-
-        //maybe return false(or http status) if exception was thrown
         if(buyerForUpdate != null) {
-
             Updater.update(buyerForUpdate,data, Buyer.class);
-
             buyerRepository.save(buyerForUpdate);
         }
     }

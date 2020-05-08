@@ -1,21 +1,17 @@
 package com.company.controller;
 
-import com.company.controller.exception.NoContentException;
 import com.company.entity.helpentity.InBuyerDistrictBuy;
 import com.company.entity.tableentity.Buy;
 import com.company.service.BuyService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("buy")
+@RequestMapping("/buy")
 public class BuyController {
     @Autowired
     private BuyService buyService;
@@ -40,19 +36,8 @@ public class BuyController {
     }
 
     @GetMapping("/find/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "object with given id not found")
-    }
-    )
     public Buy findById(@PathVariable int id){
-        Optional<Buy> optional = buyService.findById(id);
-        Buy buy = optional.orElse(null);
-
-        if(buy == null){
-            throw new NoContentException();
-        }
-
-        return buy;
+        return buyService.findById(id);
     }
 
     @PutMapping("/updateFull")

@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.controller.exception.NotFoundException;
 import com.company.entity.helpentity.InBuyerDistrictBuy;
 import com.company.entity.helpentity.jointables.BuyJoin;
 import com.company.entity.tableentity.Book;
@@ -24,8 +25,8 @@ public class BuyService {
     private BookService bookService;
 
     public void create(Buy buy){
-        Buyer b = buyerService.findById(buy.getIdbuyer()).orElse(null);
-        Book book = bookService.findById(buy.getIdbook()).orElse(null);
+        Buyer b = buyerService.findById(buy.getIdbuyer());
+        Book book = bookService.findById(buy.getIdbook());
 
         if(b != null & book != null){
             double sum = book.getPrice()*buy.getCount();
@@ -52,12 +53,18 @@ public class BuyService {
         return buyRepository.findAll();
     }
 
-    public Optional<Buy> findById(int id){
-        return buyRepository.findById(id);
+    public Buy findById(int id){
+        Buy buy = buyRepository.findById(id).orElse(null);
+
+        if(buy == null){
+            throw new NotFoundException();
+        }else {
+            return buy;
+        }
     }
 
     public void updateFull(Buy buy){
-        Buy buyOld = buyRepository.getOne(buy.getId());
+        Buy buyOld = findById(buy.getId());
 
         if (buyOld != null){
             buyOld.copy(buy);
@@ -68,9 +75,8 @@ public class BuyService {
     public void update(int id, Map<String, String> data){
         System.out.println(data);
 
-        Buy buyForUpdate = buyRepository.findById(id).orElse(null);
+        Buy buyForUpdate = findById(id);
 
-        //maybe return false(or http status) if exception was thrown
         if(buyForUpdate != null) {
             Updater.update(buyForUpdate,data, Buy.class);
 

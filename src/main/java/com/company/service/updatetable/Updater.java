@@ -1,6 +1,9 @@
 package com.company.service.updatetable;
 
+import com.company.controller.exception.UpdateException;
 import org.apache.commons.lang3.ClassUtils;
+import org.springframework.http.HttpStatus;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Updater {
-    public static void update(Updatable entity, Map<String,String> params, Class entityClass) throws UpdateException{
+    public static void update(Updatable entity, Map<String,String> params, Class entityClass) throws UpdateException {
         List<String> status = new ArrayList<>();
 
         params.forEach((k, v) -> {
@@ -48,7 +51,7 @@ public class Updater {
 
         String result = String.join(", ", status);
         if(!"".equals(result)) {
-            throw  new UpdateException(result);
+            throw  new UpdateException(HttpStatus.CONFLICT,result);
         }
     }
 }
