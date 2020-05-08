@@ -1,11 +1,11 @@
 package com.company.service;
 
+import com.company.controller.exception.NotFoundException;
 import com.company.entity.helpentity.BookBuy;
 import com.company.entity.helpentity.NamePrice;
 import com.company.entity.tableentity.Book;
 import com.company.repository.BookRepository;
 
-import com.company.service.updatetable.UpdateException;
 import com.company.service.updatetable.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +28,18 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Optional<Book> findById(int id){
-        return bookRepository.findById(id);
+    public Book findById(int id) throws NotFoundException {
+        Book book = bookRepository.findById(id).orElse(null);
+
+        if(book == null){
+            throw new NotFoundException();
+        }else {
+            return book;
+        }
     }
 
     public void updateFull(Book book){
-        Book bookOld = bookRepository.getOne(book.getId());
+        Book bookOld = findById(book.getId());
 
         if (bookOld != null){
             System.out.println("!");
@@ -42,14 +48,13 @@ public class BookService {
         }
     }
 
-    public void update(int id, Map<String, String> data) throws UpdateException{
+    public void update(int id, Map<String, String> data){
         System.out.println(data);
 
-        Book bookForUpdate = bookRepository.findById(id).orElse(null);
+        Book bookForUpdate = findById(id);
 
         if(bookForUpdate != null){
             Updater.update(bookForUpdate,data,Book.class);
-
             bookRepository.save(bookForUpdate);
         }
     }

@@ -1,11 +1,9 @@
 package com.company.controller;
 
-import com.company.controller.exception.NoContentException;
 import com.company.entity.helpentity.BookBuy;
 import com.company.entity.helpentity.NamePrice;
 import com.company.entity.tableentity.Book;
 import com.company.service.BookService;
-import com.company.service.updatetable.UpdateException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,18 +32,8 @@ public class BookController {
     }
 
     @GetMapping("/find/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "object with given id not found")
-    }
-    )
     public Book findById(@PathVariable int id){
-        Optional<Book> optional = bookService.findById(id);
-
-        Book book = optional.orElse(null);
-        if(book == null){
-            throw new NoContentException();
-        }
-        return book;
+        return bookService.findById(id);
     }
 
     @PutMapping("/updateFull")
@@ -60,12 +48,7 @@ public class BookController {
     }
     )
     public void update(@RequestParam int id, @RequestBody Map<String,String> data){
-
-        try {
-            bookService.update(id, data);
-        }catch (UpdateException e){
-            throw e;
-        }
+        bookService.update(id, data);
     }
 
     @GetMapping("/namePrice")
